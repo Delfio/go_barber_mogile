@@ -1,0 +1,12 @@
+{
+  "name": "gobarbermobile",
+  "displayName": "gobarbermobile",
+  "expo": {
+    "name": "gobarbermobile",
+    "slug": "gobarbermobile",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
