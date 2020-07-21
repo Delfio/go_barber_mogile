@@ -1,12 +1,14 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Image } from 'react-native';
+import logoImg from '../../assets/logo.png';
 
-// import { Container } from './styles';
+import { Container, Title } from './styles';
 
 const SignIn: React.FC = () => (
-  <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-    <Text style={{ color: '#fff' }}>SignIn</Text>
-  </View>
+  <Container>
+    <Image source={logoImg} />
+    <Title>SignIn</Title>
+  </Container>
 );
 
 export default SignIn;
