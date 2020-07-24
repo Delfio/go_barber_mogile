@@ -19,10 +19,6 @@ export const Title = styled.Text`
   margin: 64px 0 24px;
 `;
 
-interface BackToSignInContainerButtonProps {
-  isOpen: boolean;
-}
-
 export const BackToSignInContainerButton = styled.TouchableOpacity`
   position: absolute;
   left: 0;

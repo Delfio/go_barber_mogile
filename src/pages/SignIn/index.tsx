@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import React, { useCallback, useRef } from 'react';
 import {
-  Image, View, KeyboardAvoidingView, Platform, ScrollView,
+  Image, View, KeyboardAvoidingView, Platform, ScrollView, TextInput,
 } from 'react-native';
 
 import { Form } from '@unform/mobile';
@@ -27,6 +27,8 @@ const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
+  const passwordInputRef = useRef<TextInput>(null);
+
   const handleSignIn = useCallback((data: object) => {
     console.log(data);
   }, []);
@@ -50,8 +52,25 @@ const SignIn: React.FC = () => {
                 <Title>Faça seu Logon</Title>
               </View>
               <Form style={{ width: '100%' }} onSubmit={handleSignIn} ref={formRef}>
-                <Input name="e-mail" icon="mail" placeholder="E-mail" />
-                <Input name="password" icon="lock" placeholder="Senha" />
+                <Input
+                  name="e-mail"
+                  icon="mail"
+                  keyboardType="email-address"
+                  placeholder="E-mail"
+                  returnKeyType="next"
+                  onSubmitEditing={() => {
+                    passwordInputRef.current.focus();
+                  }}
+                />
+                <Input
+                  ref={passwordInputRef}
+                  name="password"
+                  secureTextEntry
+                  onSubmitEditing={() => formRef.current.submitForm()}
+                  icon="lock"
+                  placeholder="Senha"
+                  returnKeyType="send"
+                />
 
                 <Button onPress={() => formRef.current?.submitForm()}>
                   Entrar
