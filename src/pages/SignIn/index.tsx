@@ -1,9 +1,13 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/ban-types */
+import React, { useCallback, useRef } from 'react';
 import {
   Image, View, KeyboardAvoidingView, Platform, ScrollView,
 } from 'react-native';
-import { Feather } from '@expo/vector-icons';
 
+import { Form } from '@unform/mobile';
+import { FormHandles } from '@unform/core';
+
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 import logoImg from '../../assets/logo.png';
@@ -21,6 +25,11 @@ import {
 
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
+  const formRef = useRef<FormHandles>(null);
+
+  const handleSignIn = useCallback((data: object) => {
+    console.log(data);
+  }, []);
 
   return (
     (
@@ -40,14 +49,14 @@ const SignIn: React.FC = () => {
               <View>
                 <Title>Faça seu Logon</Title>
               </View>
+              <Form style={{ width: '100%' }} onSubmit={handleSignIn} ref={formRef}>
+                <Input name="e-mail" icon="mail" placeholder="E-mail" />
+                <Input name="password" icon="lock" placeholder="Senha" />
 
-              <Input name="e-mail" icon="mail" placeholder="E-mail" />
-              <Input name="password" icon="lock" placeholder="Senha" />
-
-              <Button onPress={() => console.log('deu')}>
-                Entrar
-              </Button>
-
+                <Button onPress={() => formRef.current?.submitForm()}>
+                  Entrar
+                </Button>
+              </Form>
               <ForgotPasswordContainer>
                 <ForgotPasswordText>Esqueci minha senha</ForgotPasswordText>
               </ForgotPasswordContainer>

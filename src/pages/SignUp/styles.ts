@@ -1,6 +1,5 @@
 import styled, { css } from 'styled-components/native';
 import { Platform, Dimensions, Animated } from 'react-native';
-// import {} from 'expo-constants';
 
 const { OS } = Platform;
 const { width: ScreenWidth } = Dimensions.get('screen');
@@ -9,7 +8,7 @@ export const Container = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-  padding: 0 30px ${OS === 'android' ? 120 : 50}px;
+  padding: 0 30px ${OS === 'android' ? 180 : 50}px;
 
 `;
 

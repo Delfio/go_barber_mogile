@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, {
   useRef, useCallback, useEffect, useState,
 } from 'react';
@@ -5,6 +7,9 @@ import {
   Image, View, KeyboardAvoidingView, Platform, ScrollView, Animated, Keyboard,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+
+import { Form } from '@unform/mobile';
+import { FormHandles } from '@unform/core';
 
 import { useNavigation } from '@react-navigation/native';
 import logoImg from '../../assets/logo.png';
@@ -23,7 +28,7 @@ import {
 const SignUp: React.FC = () => {
   const [animation, _] = useState(new Animated.Value(0));
   const [open, setOpen] = useState(false);
-
+  const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
 
   const HideView = useCallback(() => {
@@ -37,6 +42,10 @@ const SignUp: React.FC = () => {
     ).start();
     setOpen(!open);
   }, [animation, open]);
+
+  const handleSubmit = useCallback((data: object) => {
+    console.log(data);
+  }, []);
 
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', HideView);
@@ -64,15 +73,16 @@ const SignUp: React.FC = () => {
             <View>
               <Title>Crie sua conta</Title>
             </View>
+            <Form ref={formRef} style={{ width: '100%' }} onSubmit={handleSubmit}>
+              <Input name="name" icon="user" placeholder="Seu Nome" />
+              <Input name="email" icon="mail" placeholder="Seu E-mail" />
+              <Input name="password" icon="lock" placeholder="Seu Senha" />
+              <Input name="confirm-password" icon="lock" placeholder="Confirmar sua senha" />
 
-            <Input name="name" icon="user" placeholder="E-mail" />
-            <Input name="email" icon="mail" placeholder="E-mail" />
-            <Input name="password" icon="lock" placeholder="Senha" />
-            <Input name="confirm-password" icon="lock" placeholder="Confirmar sua senha" />
-
-            <Button>
-              Entrar
-            </Button>
+              <Button onPress={() => formRef.current.submitForm()}>
+                Entrar
+              </Button>
+            </Form>
           </Container>
         </ScrollView>
       </KeyboardAvoidingView>
