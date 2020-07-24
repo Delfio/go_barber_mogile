@@ -1,11 +1,13 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { Text, Animated, TouchableWithoutFeedback } from 'react-native';
+import React, {
+  useCallback, useState, useEffect, memo,
+} from 'react';
+import { Animated, TouchableWithoutFeedback } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { Container, AnimationButton } from './styles';
 
 const FloatingButton: React.FC = () => {
-  const [animation, setAnimation] = useState(new Animated.Value(0));
+  const [animation, _] = useState(new Animated.Value(0));
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ const FloatingButton: React.FC = () => {
       {
         translateY: animation.interpolate({
           inputRange: [0, 1],
-          outputRange: [0, -180],
+          outputRange: [0, -170],
         }),
       },
     ],
@@ -135,4 +137,4 @@ const FloatingButton: React.FC = () => {
   );
 };
 
-export default FloatingButton;
+export default memo(FloatingButton);

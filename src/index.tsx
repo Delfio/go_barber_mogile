@@ -6,6 +6,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import { useFonts, RobotoSlab_400Regular, RobotoSlab_500Medium } from '@expo-google-fonts/roboto-slab';
 import { AppLoading } from 'expo';
+import FloatingButton from './components/FloatingButton';
 
 import Routes from './routes';
 
@@ -24,6 +25,7 @@ const App: React.FC = () => {
     <NavigationContainer>
       <StatusBar style="light" backgroundColor="#312e38" />
       <Routes />
+      <FloatingButton />
     </NavigationContainer>
   );
 };

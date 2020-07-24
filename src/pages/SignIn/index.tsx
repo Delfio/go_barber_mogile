@@ -28,7 +28,7 @@ const SignIn: React.FC = () => (
         keyboardShouldPersistTaps="handled"
       >
         <Container>
-          <Image source={logoImg} />
+          <Image resizeMethod="resize" source={logoImg} />
 
           <View>
             <Title>Faça seu Logon</Title>
@@ -56,7 +56,10 @@ const SignIn: React.FC = () => (
            * ANIMAR A RETIRADA
            */
         }
-    <CreateAccountButton onPress={() => {}}>
+    <CreateAccountButton onPress={() => {
+      console.log('tes123');
+    }}
+    >
       <Feather name="log-in" size={20} color="#ff9000" />
       <CreateAccountText>Criar uma nova conta</CreateAccountText>
     </CreateAccountButton>
