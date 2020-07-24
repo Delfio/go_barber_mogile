@@ -1,6 +1,6 @@
 /* eslint-disable no-return-assign */
 import React, {
-  useEffect, useRef, useImperativeHandle, forwardRef,
+  useEffect, useRef, useImperativeHandle, forwardRef, useState, useCallback,
 } from 'react';
 import { View, TextInputProps } from 'react-native';
 
@@ -25,6 +25,9 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
   { name, icon, ...rest },
   ref,
 ) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const [isFilled, setIsFilled] = useState(false);
+
   const inputElementRef = useRef<any>(null);
   const {
     registerField, defaultValue = '', fieldName, error,
@@ -54,13 +57,24 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
     });
   }, [fieldName, registerField]);
 
+  const handleInputFocus = useCallback(() => {
+    setIsFocused(true);
+  }, []);
+
+  const handleInputBlur = useCallback(() => {
+    setIsFocused(false);
+    setIsFilled(!!inputValueRef.current.value);
+  }, []);
+
   return (
-    <Container>
-      <Icon name={icon} size={20} color="#666360" />
+    <Container isFocused={isFocused}>
+      <Icon name={icon} size={20} color={isFocused || isFilled ? '#ff9000' : '#666360'} />
       <TextInput
         ref={inputElementRef}
         placeholderTextColor="#666360"
         keyboardAppearance="dark"
+        onFocus={handleInputFocus}
+        onBlur={handleInputBlur}
         defaultValue={defaultValue}
         onChangeText={(value) => inputValueRef.current.value = value}
         {...rest}
