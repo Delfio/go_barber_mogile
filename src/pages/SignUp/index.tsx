@@ -5,6 +5,8 @@ import {
   Image, View, KeyboardAvoidingView, Platform, ScrollView, Animated, Keyboard,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+
+import { useNavigation } from '@react-navigation/native';
 import logoImg from '../../assets/logo.png';
 
 import Input from '../../components/input';
@@ -22,7 +24,9 @@ const SignUp: React.FC = () => {
   const [animation, _] = useState(new Animated.Value(0));
   const [open, setOpen] = useState(false);
 
-  const teste = useCallback(() => {
+  const navigation = useNavigation();
+
+  const HideView = useCallback(() => {
     Animated.timing(
       animation,
       {
@@ -35,13 +39,13 @@ const SignUp: React.FC = () => {
   }, [animation, open]);
 
   useEffect(() => {
-    Keyboard.addListener('keyboardDidShow', teste);
-    Keyboard.addListener('keyboardDidHide', teste);
+    Keyboard.addListener('keyboardDidShow', HideView);
+    Keyboard.addListener('keyboardDidHide', HideView);
     return () => {
-      Keyboard.removeListener('keyboardDidShow', teste);
-      Keyboard.removeListener('keyboardDidHide', teste);
+      Keyboard.removeListener('keyboardDidShow', HideView);
+      Keyboard.removeListener('keyboardDidHide', HideView);
     };
-  }, [teste]);
+  }, [HideView]);
 
   return (
     <>
@@ -53,7 +57,6 @@ const SignUp: React.FC = () => {
         <ScrollView
           contentContainerStyle={{ flex: 1 }}
           keyboardShouldPersistTaps="handled"
-
         >
           <Container>
             <Image resizeMethod="resize" source={logoImg} />
@@ -65,6 +68,7 @@ const SignUp: React.FC = () => {
             <Input name="name" icon="user" placeholder="E-mail" />
             <Input name="email" icon="mail" placeholder="E-mail" />
             <Input name="password" icon="lock" placeholder="Senha" />
+            <Input name="confirm-password" icon="lock" placeholder="Confirmar sua senha" />
 
             <Button>
               Entrar
@@ -73,15 +77,7 @@ const SignUp: React.FC = () => {
         </ScrollView>
       </KeyboardAvoidingView>
 
-      {/**
-           * TODO -
-           * Retirar da tela o botão de Criar nova conta quando o teclado é invocado,
-           * pois no android atrapalha
-           *
-           * ANIMAR A RETIRADA
-           */
-        }
-      <BackToSignInContainerButton>
+      <BackToSignInContainerButton onPress={() => navigation.goBack()}>
         <Animated.View style={{
           transform: [
             { scale: open ? 0 : 1 },
