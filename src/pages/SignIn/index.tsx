@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import React, { useCallback, useRef } from 'react';
 import {
-  Image, View, KeyboardAvoidingView, Platform, ScrollView, TextInput,
+  Image, View, KeyboardAvoidingView, Platform, ScrollView, TextInput, Alert,
 } from 'react-native';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
 
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import getValidationErros from '../../utils/getValidationErros';
 
 import logoImg from '../../assets/logo.png';
 
@@ -23,14 +25,44 @@ import {
   CreateAccountText,
 } from './styles';
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
   const navigation = useNavigation();
   const formRef = useRef<FormHandles>(null);
 
   const passwordInputRef = useRef<TextInput>(null);
 
-  const handleSignIn = useCallback((data: object) => {
-    console.log(data);
+  const handleSignIn = useCallback(async (data: SignInFormData): Promise<void> => {
+    try {
+        formRef.current?.setErrors({});
+
+        const schemaValidation = Yup.object().shape({
+          email: Yup.string().required('Email obrigatório').email('E-mail inválido'),
+          password: Yup.string().required('Senha obrigatória'),
+        });
+
+        await schemaValidation.validate(data, {
+          abortEarly: false,
+        });
+
+      // await signIn({
+      //   email: data.email,
+      //   password: data.password,
+      // });
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErros(err);
+
+        formRef.current?.setErrors(errors);
+        return;
+      }
+
+      Alert.alert('Erro na autenticação', 'Ocorreu um erro ao fazer login, cheque suas credênciais!');
+    }
   }, []);
 
   return (
@@ -53,7 +85,7 @@ const SignIn: React.FC = () => {
               </View>
               <Form style={{ width: '100%' }} onSubmit={handleSignIn} ref={formRef}>
                 <Input
-                  name="e-mail"
+                  name="email"
                   icon="mail"
                   keyboardType="email-address"
                   placeholder="E-mail"

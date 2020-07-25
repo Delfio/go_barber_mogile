@@ -4,14 +4,17 @@ import React, {
   useRef, useCallback, useEffect, useState,
 } from 'react';
 import {
-  Image, View, KeyboardAvoidingView, Platform, ScrollView, Animated, Keyboard, TextInput,
+  Image, View, KeyboardAvoidingView, Platform, ScrollView, Animated, Keyboard, TextInput, Alert,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
 
 import { useNavigation } from '@react-navigation/native';
+import getValidationErros from '../../utils/getValidationErros';
+
 import logoImg from '../../assets/logo.png';
 
 import Input from '../../components/input';
@@ -24,6 +27,13 @@ import {
   BackToSignInText,
   BackToSignInContainerButton,
 } from './styles';
+
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
 
 const SignUp: React.FC = () => {
   const [animation, _] = useState(new Animated.Value(0));
@@ -48,8 +58,31 @@ const SignUp: React.FC = () => {
     setOpen(!open);
   }, [animation, open]);
 
-  const handleSubmit = useCallback((data: object) => {
-    console.log(data);
+  const handleSubmit = useCallback(async (data: SignUpFormData) => {
+    try {
+      formRef.current?.setErrors({});
+
+      const schemaValidation = Yup.object().shape({
+        name: Yup.string().required('Nome obrigatório'),
+        email: Yup.string().required('Email obrigatório').email('E-mail inválido'),
+        password: Yup.string().min(6, 'Minímo de 6 caractéres'),
+        confirmPassword: Yup.string().oneOf([Yup.ref('password'), 'null'], 'Senhas não condizem'),
+      });
+
+      await schemaValidation.validate(data, {
+        abortEarly: false,
+      });
+
+      // await api.post('/users', data);
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErros(err);
+
+            formRef.current?.setErrors(errors);
+            return;
+      }
+      Alert.alert('Erro no cadastro', 'Ocorreu um erro ao fazer um cadastro, tente novamente!');
+    }
   }, []);
 
   useEffect(() => {
@@ -117,7 +150,7 @@ const SignUp: React.FC = () => {
               <Input
                 ref={confirmPasswordInputRef}
                 secureTextEntry
-                name="confirm-password"
+                name="confirmPassword"
                 icon="lock"
                 placeholder="Confirmar sua senha"
                 returnKeyType="send"

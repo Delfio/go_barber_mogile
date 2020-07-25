@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-return-assign */
 import React, {
   useEffect, useRef, useImperativeHandle, forwardRef, useState, useCallback,
@@ -46,7 +47,7 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
       name: fieldName,
       ref: inputValueRef.current,
       path: 'value',
-      setValue(ref: any, value) {
+      setValue(_: any, value) {
         inputValueRef.current.value = value;
         inputElementRef.current.setNativeProps({ text: value });
       },
@@ -67,8 +68,17 @@ const Input: React.RefForwardingComponent<InputRef, InputProps> = (
   }, []);
 
   return (
-    <Container isFocused={isFocused}>
-      <Icon name={icon} size={20} color={isFocused || isFilled ? '#ff9000' : '#666360'} />
+    <Container isFocused={isFocused} isErrored={!!error}>
+      <Icon
+        name={icon}
+        size={20}
+        color={
+          isFocused ? '#ff9000'
+            : error ? '#c53030'
+              : '#666360'
+        }
+      />
+
       <TextInput
         ref={inputElementRef}
         placeholderTextColor="#666360"
